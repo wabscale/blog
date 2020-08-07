@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  traefik:
+    image: "traefik:v2.2.0"
+    restart: always
+    command:
+      - "--api.insecure=false"
+
+      - "--providers.docker=true"
+      - "--providers.docker.watch"
+      - "--providers.docker.exposedbydefault=false"
+
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--entrypoints.http.http.redirections.entryPoint.to=https"
+      - "--entrypoints.http.http.redirections.entryPoint.scheme=https"
+
+      - "--certificatesresolvers.tls.acme.httpchallenge=true"
+      - "--certificatesresolvers.tls.acme.httpchallenge.entrypoint=http"
+      - "--certificatesresolvers.tls.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.tls.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "traefik_data:/letsencrypt"
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${AUTH}"
+      - "traefik.http.middlewares.traefik-auth.basicauth.removeheader=true"
+
+  blog:
+    build: .
+    restart: always
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.blog.rule=Host(`johncunniff.dev`)"
+      - "traefik.http.routers.api.entrypoints=https"
+      - "traefik.http.routers.api.tls.certresolver=tls"
+      - "traefik.http.middlewares.api.redirectscheme.scheme=https"
+      - "traefik.http.services.api.loadbalancer.server.port=80"
