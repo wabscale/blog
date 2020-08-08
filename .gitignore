@@ -2,3 +2,5 @@ venv
 __pycache__
 *.pyc
 output
+self-hosted-kubernetes.md
+docker-compose.override.yml
