@@ -12,33 +12,37 @@ come up.
 ## Overview
 
 - Provisioning
-  - Topology
-  - Rancher
+    - Topology
+    - Rancher
 - Monitoring
-  - Rancher Monitoring
-  - Kubernetes Dashboard
+    - Rancher Monitoring
+    - Kubernetes Dashboard
 - Persistent Volumes
-  - Longhorn
-  - nfs
+    - Longhorn
+    - nfs
 - Database (mysql)
-  - Setup
-  - Backups
+    - Setup
+    - Backups
 - Networking
-  - Firewalls
-  - Traefik
-  - Middlewares
-  - Ingress Nodes
-  - DNS
+    - Firewalls
+    - Traefik
+    - Middlewares
+    - Ingress Nodes
+    - DNS
 - Deployment guide
-  - pods
-  - deployments
-  - services
-  - exposing services through traefik ingress
-  - locking down services with traefik middlewares
+    - pods
+    - deployments
+    - services
+    - exposing services through traefik ingress
+    - locking down services with traefik middlewares
 - Example deployment (etherpad)
-  - config files
-  - create secrets
-  - deploy
+    - config files
+    - create secrets
+    - deploy
+- Maintinence
+    - cordening node
+    - draining node
+    - minimizing downtime
   
 
 

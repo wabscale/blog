@@ -35,8 +35,6 @@ services:
   blog:
     build: .
     restart: always
-    ports:
-      - 127.0.0.1:5000:80
     networks:
       - traefik-proxy
     labels:
