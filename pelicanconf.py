@@ -49,4 +49,4 @@ PLUGINS = ['m.htmlsanity']
 M_COLLAPSE_FIRST_ARTICLE = True
 M_HIDE_ARTICLE_SUMMARY = True
 
-STATIC_PATHS = ['files']
+STATIC_PATHS = ['files', 'images']
