@@ -23,3 +23,30 @@ Most apps you will run will need [persistent volumes](https://kubernetes.io/docs
 The main difference that you will need to decide on a case by case basis is which [access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) you need. For the most part, this is going to be a decision between if it will be `ReadWriteOnce` or `ReadWriteMany`. ReadWriteOnce means that the volume will only ever be able to be mounted to one container at a time. ReadWriteMany is where you can mount the volume on multiple containers at once.
 
 I would recommend running [longhorn](https://rancher.com/products/longhorn/) and longhorn-nfs. [Longhorn](https://rancher.com/products/longhorn/) is maintained by Rancher and provides some of the creature comforts of persistent volume solutions on hosted platforms (like EBS). [Longhorn](https://rancher.com/products/longhorn/) provides a pertty web interface where you can manage volumes, setup backup and snapshot schedules, and perform maintenance when necessary. [Longhorn](https://rancher.com/products/longhorn/) only supports ReadWriteOnce, which can be very limiting depending on your application. For my needs, I use longhorn-nfs. With longhorn-nfs, it creates a [longhorn](https://rancher.com/products/longhorn/) volume that is used by a completely separate nfs storage class. This allows us to have a pretty easy to set up storage class that can do multi mounts. Since the underlying volume is just a [longhorn](https://rancher.com/products/longhorn/) volume, we can also setup snapshots, and backups just like any other [longhorn](https://rancher.com/products/longhorn/) volume.
+
+
+### Longhorn 
+
+Longhorn is a super powerful StorageClass that is totally inclusive to your cluster. What I mean by that is that Longhorn has all the features of a cloud storge class but it will exist fully within your cluster. This has some advantages, and some disadvantages. On the one hand Longhorn is perfect for getting a cloud like StorageClass when your self hosting. On the other hand, your data is still dependent on your clusters stability. If your cluster becomes unrecoverably corrupted or broken, you may not be able to recover the data you had in longhorn. This is why you should schedule _external_ backups of all your critical data.
+
+Longhorn does have a pretty nice UI where you can manage your PVs. You can schedule snapshots and backups of volumes. 
+
+TODO: fillin longhorn ui image
+
+You can either install Longhorn via the Rancher UI, or just through helm. Installing via helm is significantly simpler. All you need to do is add the longhorn helm repo and install it with your options.
+
+```bash
+# Add and update repo
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
+
+# Install via helm 3
+kubectl create namespace longhorn-system
+helm install longhorn longhorn/longhorn --namespace longhorn-system
+```
+
+Once this is deployed, you can verify it created a StorageClass with:
+
+```bash
+kubectl get sc --all-namespaces
+```
